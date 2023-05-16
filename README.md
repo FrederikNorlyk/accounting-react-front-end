@@ -1,34 +1,21 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Accounting frontend
+Simple frontend for an accounting application, built using the React framework Next.js.
 
-## Getting Started
+### Technologies
+- Next.js 13 (React)
+- Typescript
+- Tailwind CSS
 
-First, run the development server:
+### What can it do?
+The application is modeled on an old PHP project, that I wrote to keep track of the expenses involved with restoring my sailboat. It keeps track of expenses, projects, and merchants.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+### Why did I make this frontend?
+In an attempt to learn Python and React I started working on this version. The frontend is the React side of that attempt. Check out my other repository [accounting-api](https://github.com/FrederikNorlyk/accounting-api) which covers the Python part.
+
+### Try it out!
+In a terminal navigate to the source code and run the following commands
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+npm install
+npm run dev
+```
+The frontend does not work without a backend so you will also need to deploy the above-mentioned API.
