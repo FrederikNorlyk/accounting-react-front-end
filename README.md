@@ -13,6 +13,12 @@ The application is modeled on an old PHP project, that I wrote to keep track of 
 In an attempt to learn Python and React I started working on this version. The frontend is the React side of that attempt. Check out my other repository [accounting-api](https://github.com/FrederikNorlyk/accounting-api) which covers the Python part.
 
 ### Try it out!
+Add a file in the root directory called <code>.env</code> with the following properties:
+```
+NEXTAUTH_SECRET=verySecretKey
+NEXTAUTH_URL=http://localhost:3000/
+```
+
 In a terminal navigate to the source code and run the following commands
 ```
 npm install
