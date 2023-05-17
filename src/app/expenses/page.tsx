@@ -1,30 +1,58 @@
 "use client";
 
-import React, { Component } from "react";
+import React from "react";
 import ExpenseEntry from "./ExpenseEntry";
 
-async function getExpenses() {
-  const url = "http://localhost:8000/expenses/";
+export class ExpensesPage extends React.Component {
 
-  const options = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
+  state = {
+    expenses: []
+  }
 
-  const res = await fetch(url, options);
-  const data = await res.json();
-  return data?.results as any[];
+  async componentDidMount() {
+    const token = localStorage.getItem("token")
+
+    const response = await fetch("http://localhost:8000/expenses/", {
+      headers: {
+        "Authorization": "Token " + token
+      }
+    })
+
+    if (!response.ok) {
+      console.error("Response not OK")
+      return;
+    }
+
+    const data = await response.json()
+
+    if (!data) {
+      console.error("Data was NULL")
+      return;
+    }
+
+    if (data.detail) {
+      console.error("data.detail: " + data.detail);
+      return;
+    }
+
+    if (!data.results) {
+      console.error("No results");
+      return;
+    }
+
+    const expenses = data.results;
+    this.setState({ expenses })
+  }
+
+  public render(): JSX.Element {
+    return (
+      <ul className="divide-y divide-gray-200">
+        {this.state.expenses.map((expense: Expense) => (
+          <ExpenseEntry key={expense.id} expense={expense} />
+        ))}
+      </ul>
+    );
+  }
 }
 
-export default async function ExpensesPage() {
-  const expenses = await getExpenses();
-
-  return (
-    <ul className="divide-y divide-gray-200">
-      {expenses?.map((expense: Expense) => (
-        <ExpenseEntry key={expense.id} expense={expense} />
-      ))}
-    </ul>
-  );
-}
+export default ExpensesPage;

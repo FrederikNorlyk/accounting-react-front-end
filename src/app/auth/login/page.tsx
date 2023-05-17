@@ -12,7 +12,23 @@ const LoginPage = ({ searchParams }: IProps) => {
   const pass = useRef("");
 
   const onSubmit = async () => {
-    const result = await signIn("credentials", {
+
+    const url = "http://localhost:8000/token/";
+
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({username: userName.current, password: pass.current}),
+      headers: { "Content-Type": "application/json" }
+    })
+    const json = await res.json()
+
+    if (!res.ok || !json) {
+      return null
+    }
+
+    localStorage.setItem("token", json.token)
+
+    await signIn("credentials", {
       username: userName.current,
       password: pass.current,
       redirect: true,
