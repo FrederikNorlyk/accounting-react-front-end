@@ -2,6 +2,7 @@
 
 import React from "react";
 import ExpenseEntry from "./ExpenseEntry";
+import { getSession } from "next-auth/react";
 
 export class ExpensesPage extends React.Component {
 
@@ -10,11 +11,12 @@ export class ExpensesPage extends React.Component {
   }
 
   async componentDidMount() {
-    const token = localStorage.getItem("token")
+    const session  = await getSession();
+    const token = session?.user.token;
 
     const response = await fetch("http://localhost:8000/expenses/", {
       headers: {
-        "Authorization": "Token " + token
+        "Authorization": `Token ${token}`
       }
     })
 

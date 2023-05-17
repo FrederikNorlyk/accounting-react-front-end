@@ -1,12 +1,12 @@
 "use client";
 
-import { SessionProvider, useSession, signIn, signOut } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react';
 import NavBar from './NavBar';
 
 export default function MainComponent(props: any) {
   return (
     <>
-      <SessionProvider session={props.session}>
+      <SessionProvider>
         <div className="min-h-full">
           <NavBar />
 

@@ -10,25 +10,32 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
-        const url = "http://localhost:8000/token/";
+        const url = "http://localhost:8000/token/"
 
-        const res = await fetch(url, {
+        const response = await fetch(url, {
           method: 'POST',
           body: JSON.stringify(credentials),
           headers: { "Content-Type": "application/json" }
         })
-        const json = await res.json()
-  
-        if (!res.ok || !json) {
+
+        if (!response.ok) {
           return null
         }
 
-        return {
-          name: json.name,
-        }
+        return await response.json()
       }
     })
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token, user }) {
+      session.user = token as any;
+      return session;
+    },
+  },
 
   pages: {
     signIn: "/auth/login"
