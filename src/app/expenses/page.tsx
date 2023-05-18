@@ -2,7 +2,7 @@
 
 import React from "react";
 import ExpenseEntry from "./ExpenseEntry";
-import { getSession } from "next-auth/react";
+import ExpenseClient from "@/clients/ExpenseClient"
 
 export class ExpensesPage extends React.Component {
 
@@ -11,38 +11,8 @@ export class ExpensesPage extends React.Component {
   }
 
   async componentDidMount() {
-    const session  = await getSession();
-    const token = session?.user.token;
-
-    const response = await fetch("http://localhost:8000/expenses/", {
-      headers: {
-        "Authorization": `Token ${token}`
-      }
-    })
-
-    if (!response.ok) {
-      console.error("Response not OK")
-      return;
-    }
-
-    const data = await response.json()
-
-    if (!data) {
-      console.error("Data was NULL")
-      return;
-    }
-
-    if (data.detail) {
-      console.error("data.detail: " + data.detail);
-      return;
-    }
-
-    if (!data.results) {
-      console.error("No results");
-      return;
-    }
-
-    const expenses = data.results;
+    const client = new ExpenseClient()
+    const expenses = await client.fetch()
     this.setState({ expenses })
   }
 

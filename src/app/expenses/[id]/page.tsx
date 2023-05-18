@@ -1,25 +1,18 @@
-import ExpenseDetail from "./ExpenseDetail";
+"use client"
+
+import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
 
-async function getExpense(id: string) {
-  const url = "http://localhost:8000/expenses/" + id + "/";
+export default async function ExpensePage(param: any) {
+  if (!param) return (
+    <div>Loading</div>
+  )
 
-  const options = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
-  const res = await fetch(url, options);
-  const data = await res.json();
-  return data as Expense;
-}
-
-export default async function ExpensePage({ params }: any) {
-  const expense = await getExpense(params.id);
+  const id = param.params.id
+  const client = new ExpenseClient()
+  const expense = await client.get(id)
 
   return (
-    // <ExpenseDetail expense={expense} />
     <ExpenseForm expense={expense} />
   );
 }
