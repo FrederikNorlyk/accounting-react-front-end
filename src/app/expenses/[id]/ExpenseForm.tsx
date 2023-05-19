@@ -1,16 +1,42 @@
 "use client"
 
-import exp from "constants";
+import ExpenseClient from "@/app/clients/ExpenseClient";
+import { useState } from "react";
 
 interface ExpenseFormParams {
-	expense: Expense|null;
+	expense: Expense | null;
 }
 
 export default function ExpenseForm(params: ExpenseFormParams) {
-	const expense = params.expense;
+	const [expense, setFormData] = useState(params.expense);
+
+	const handleChange = (e: any) => {
+		if (expense == null) {
+			return
+		}
+
+		setFormData({
+			...expense,
+			[e.target.name]: e.target.value
+		});
+	};
+
+	const handleSubmit = async (e: any) => {
+		e.preventDefault();
+
+		if (expense == null) {
+			return
+		}
+
+		const client = new ExpenseClient()
+		const addedExpense = client.post(expense)
+
+		console.log("POST result: ")
+		console.dir(addedExpense)
+	};
 
 	return (
-		<form action={expense?.url || ""} method="post">
+		<form onSubmit={handleSubmit}>
 			<div className="space-y-12">
 				<div className="border-b border-gray-900/10 pb-12">
 					<h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -35,6 +61,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									name="note"
 									id="note"
 									value={expense?.note || ""}
+									onChange={handleChange}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								/>
 							</div>
@@ -54,6 +81,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									name="amount"
 									id="amount"
 									value={expense?.amount || ""}
+									onChange={handleChange}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 								/>
 							</div>
@@ -73,6 +101,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									name="details"
 									rows={3}
 									value={expense?.details || ""}
+									onChange={handleChange}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 									defaultValue={""}
 								/>
@@ -94,6 +123,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 								<select
 									id="merchant"
 									name="merchant"
+									onChange={handleChange}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
 									<option>United States</option>
@@ -115,6 +145,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 								<select
 									id="project"
 									name="project"
+									onChange={handleChange}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
 									<option>United States</option>

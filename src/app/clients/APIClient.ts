@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 /**
  * Abstract base class for all clients that communicate with the backend API.
  */
-export default abstract class APIClient<T> {
+export default abstract class APIClient<T extends DatabaseRecord> {
 
     private domain = "http://localhost:8000/"
 
@@ -73,17 +73,52 @@ export default abstract class APIClient<T> {
      * Gets a single record.
      * 
      * @param id id of the record to get
-     * @returns the record
+     * @returns the record or NULL
      */
     public async get(id: number) : Promise<T|null> {
         const token = await this.getAccessToken()
 
-        const url = this.domain + this.getEndpoint() + id
+        const url = this.domain + this.getEndpoint() + id + "/"
 
         const response = await fetch(url, {
             headers: {
                 "Authorization": `Token ${token}`
             }
+        })
+
+        if (!response.ok) {
+            console.error("Response not OK")
+            return null
+        }
+
+        const data = await response.json()
+
+        if (!data) {
+            console.error("Data was NULL")
+            return null
+        }
+
+        return data
+    }
+
+    /**
+     * Adds a record using HTTP POST.
+     * 
+     * @param record the record to add
+     * @returns the created record
+     */
+    public async post(record: T) : Promise<T|null> {
+        const token = await this.getAccessToken()
+
+        const url = this.domain + this.getEndpoint()
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`
+            },
+            body: JSON.stringify(record)
         })
 
         if (!response.ok) {

@@ -1,5 +1,4 @@
-interface Expense {
-  id: number;
+interface Expense extends DatabaseRecord {
   url: string;
   date: string;
   note: string;

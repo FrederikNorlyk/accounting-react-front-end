@@ -1,0 +1,3 @@
+interface DatabaseRecord {
+    id: number
+}
