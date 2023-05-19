@@ -9,8 +9,13 @@ export default async function ExpensePage(param: any) {
   )
 
   const id = param.params.id
-  const client = new ExpenseClient()
-  const expense = await client.get(id)
+  var expense
+  if (id === 0) {
+    expense = (new ExpenseFactory()).buildEmptyExpense()
+  } else {
+    const client = new ExpenseClient()
+    expense = await client.get(id)
+  }
 
   return (
     <ExpenseForm expense={expense} />

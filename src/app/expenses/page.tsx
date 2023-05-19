@@ -3,6 +3,7 @@
 import React from "react";
 import ExpenseEntry from "./ExpenseEntry";
 import ExpenseClient from "@/clients/ExpenseClient"
+import AddExpenseEntry from "./AddExpenseEntry";
 
 export class ExpensesPage extends React.Component {
 
@@ -19,6 +20,7 @@ export class ExpensesPage extends React.Component {
   public render(): JSX.Element {
     return (
       <ul className="divide-y divide-gray-200">
+        <AddExpenseEntry />
         {this.state.expenses.map((expense: Expense) => (
           <ExpenseEntry key={expense.id} expense={expense} />
         ))}
