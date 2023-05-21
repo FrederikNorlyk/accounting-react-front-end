@@ -29,7 +29,7 @@ export default function ExpenseEntry(props: ExpenseEntryProp) {
         </div>
         <div className="hidden sm:flex sm:flex-col sm:items-end">
           <p className="text-sm leading-6 text-gray-900">Project here</p>
-          <p className="mt-1 text-xs leading-5 text-gray-500">{expense.date}</p>
+          <p className="mt-1 text-xs leading-5 text-gray-500">{expense.date.toJSON()}</p>
         </div>
       </Link>
     </li>

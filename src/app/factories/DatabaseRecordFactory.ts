@@ -1,7 +1,7 @@
 /**
  * Factory for building database records.
  */
-abstract class DatabaseRecordFactory<T extends DatabaseRecord> {
+export default abstract class DatabaseRecordFactory<T extends DatabaseRecord> {
 
     /**
      * Returns an empty database record.

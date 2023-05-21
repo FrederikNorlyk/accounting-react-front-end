@@ -1,7 +1,9 @@
+import DatabaseRecordFactory from "./DatabaseRecordFactory";
+
 /**
  * Factory for creating {@link Project} records.
  */
-class ProjectFactory extends DatabaseRecordFactory<Project> {
+export default class ProjectFactory extends DatabaseRecordFactory<Project> {
     
     /**
      * Builds and empty project.

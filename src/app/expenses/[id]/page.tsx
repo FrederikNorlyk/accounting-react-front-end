@@ -2,6 +2,7 @@
 
 import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
+import ExpenseFactory from "@/app/factories/ExpenseFactory";
 
 export default async function ExpensePage(param: any) {
   if (!param) return (
@@ -9,8 +10,10 @@ export default async function ExpensePage(param: any) {
   )
 
   const id = param.params.id
+  const isAddMode = id == 0;
+
   var expense
-  if (id === 0) {
+  if (isAddMode) {
     expense = (new ExpenseFactory()).buildEmptyExpense()
   } else {
     const client = new ExpenseClient()

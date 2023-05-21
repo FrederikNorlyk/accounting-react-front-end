@@ -3,7 +3,7 @@
  */
 interface Expense extends DatabaseRecord {
   url: string;
-  date: string;
+  date: Date;
   note: string;
   details: string;
   amount: number;

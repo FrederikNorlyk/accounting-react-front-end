@@ -13,11 +13,18 @@ export default abstract class APIClient<T extends DatabaseRecord> {
     abstract getEndpoint(): string
 
     /**
+     * Converts the types of the given record's fields to their specifications.
+     * 
+     * @param record 
+     */
+    abstract convertTypes(record: T): T;
+
+    /**
      * Gets the user's access token.
      * 
      * @returns the user's access token
      */
-    protected async getAccessToken() : Promise<string> {
+    protected async getAccessToken(): Promise<string> {
         const session = await getSession()
 
         if (!session) {
@@ -33,7 +40,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
      * 
      * @returns a list of records
      */
-    public async fetch() : Promise<T[]> {
+    public async fetch(): Promise<T[]> {
         const token = await this.getAccessToken()
 
         const url = this.domain + this.getEndpoint()
@@ -66,7 +73,12 @@ export default abstract class APIClient<T extends DatabaseRecord> {
             return []
         }
 
-        return data.results
+        var records = [] as T[];
+        for (let index = 0; index < data.results.length; index++) {
+            const record = data.results[index];
+            records.push(this.convertTypes(record))
+        }
+        return records
     }
 
     /**
@@ -75,7 +87,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
      * @param id id of the record to get
      * @returns the record or NULL
      */
-    public async get(id: number) : Promise<T|null> {
+    public async get(id: number): Promise<T | null> {
         const token = await this.getAccessToken()
 
         const url = this.domain + this.getEndpoint() + id + "/"
@@ -98,7 +110,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
             return null
         }
 
-        return data
+        return this.convertTypes(data)
     }
 
     /**
@@ -107,13 +119,27 @@ export default abstract class APIClient<T extends DatabaseRecord> {
      * @param record the record to add
      * @returns the created record
      */
-    public async post(record: T) : Promise<T|null> {
+    public async post(record: T): Promise<T | null> {
+        return this.submit(record, "POST");
+    }
+
+    /**
+    * Updates a record using HTTP PUT.
+    * 
+    * @param record the record to update
+    * @returns the updated record
+    */
+    public async put(record: T): Promise<T | null> {
+        return this.submit(record, "POST");
+    }
+
+    private async submit(record: T, method: string): Promise<T | null> {
         const token = await this.getAccessToken()
 
         const url = this.domain + this.getEndpoint()
 
         const response = await fetch(url, {
-            method: "POST",
+            method: method,
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Token ${token}`

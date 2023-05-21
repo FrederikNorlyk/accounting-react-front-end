@@ -1,7 +1,10 @@
+import DatabaseRecordFactory from "./DatabaseRecordFactory";
+import ProjectFactory from "./ProjectFactory";
+
 /**
  * Factor for building {@link Expense} records.
  */
-class ExpenseFactory extends DatabaseRecordFactory<Expense> {
+export default class ExpenseFactory extends DatabaseRecordFactory<Expense> {
 
     /**
      * Builds an empty expense record.
@@ -12,7 +15,7 @@ class ExpenseFactory extends DatabaseRecordFactory<Expense> {
         var record = this.emptyRecord();
 
         record.url = ""
-        record.date = ""
+        record.date = new Date()
         record.note = ""
         record.details = ""
         record.amount = 0

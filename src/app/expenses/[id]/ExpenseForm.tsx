@@ -1,6 +1,7 @@
 "use client"
 
 import ExpenseClient from "@/app/clients/ExpenseClient";
+import DateUtil from "@/app/utils/DateUtil";
 import { useState } from "react";
 
 interface ExpenseFormParams {
@@ -15,9 +16,14 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 			return
 		}
 
+		var value = e.target.value
+		if (e.target.name === "date") {
+			value = e.target.valueAsDate
+		}
+
 		setFormData({
 			...expense,
-			[e.target.name]: e.target.value
+			[e.target.name]: value
 		});
 	};
 
@@ -29,10 +35,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		}
 
 		const client = new ExpenseClient()
-		const addedExpense = client.post(expense)
-
-		console.log("POST result: ")
-		console.dir(addedExpense)
+		var addedExpense;
+		if (expense.id == 0) {
+			addedExpense = client.post(expense)
+		} else {
+			addedExpense = client.put(expense)
+		}
 	};
 
 	return (
@@ -46,29 +54,31 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 						Update the expense
 					</p>
 
-					{/* Note */}
 					<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-						<div className="sm:col-span-3">
+
+						{/* Date */}
+						<div className="sm:col-span-full">
 							<label
 								htmlFor="note"
 								className="block text-sm font-medium leading-6 text-gray-900"
 							>
-								Note
+								Date
+								{/* 2018-06-12T19:30 */}
 							</label>
 							<div className="mt-2">
 								<input
-									type="text"
-									name="note"
-									id="note"
-									value={expense?.note || ""}
+									type="date"
+									name="date"
+									id="date"
+									value={DateUtil.dateToInputFormat(expense?.date || new Date())} 
 									onChange={handleChange}
-									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								/>
 							</div>
 						</div>
 
 						{/* Amount */}
-						<div className="sm:col-span-3">
+						<div className="sm:col-span-full">
 							<label
 								htmlFor="amount"
 								className="block text-sm font-medium leading-6 text-gray-900"
@@ -82,7 +92,28 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									id="amount"
 									value={expense?.amount || ""}
 									onChange={handleChange}
-									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+								/>
+							</div>
+						</div>
+
+						{/* Note */}
+						<div className="sm:col-span-full">
+							<label
+								htmlFor="note"
+								className="block text-sm font-medium leading-6 text-gray-900"
+							>
+								Expense
+							</label>
+							<div className="mt-2">
+								<input
+									type="text"
+									name="note"
+									id="note"
+									value={expense?.note || ""}
+									placeholder="What did you buy?"
+									onChange={handleChange}
+									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
 								/>
 							</div>
 						</div>
@@ -102,7 +133,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									rows={3}
 									value={expense?.details || ""}
 									onChange={handleChange}
-									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
 									defaultValue={""}
 								/>
 							</div>
@@ -126,9 +157,9 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									onChange={handleChange}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
-									<option>United States</option>
-									<option>Canada</option>
-									<option>Mexico</option>
+									<option value={1}>United States</option>
+									<option value={2}>Canada</option>
+									<option value={3}>Mexico</option>
 								</select>
 							</div>
 						</div>
@@ -148,9 +179,9 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									onChange={handleChange}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
-									<option>United States</option>
-									<option>Canada</option>
-									<option>Mexico</option>
+									<option value={1}>United States</option>
+									<option value={2}>Canada</option>
+									<option value={3}>Mexico</option>
 								</select>
 							</div>
 						</div>
