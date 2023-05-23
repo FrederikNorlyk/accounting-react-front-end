@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react";
  */
 export default abstract class APIClient<T extends DatabaseRecord> {
 
-    private domain = "http://localhost:8000/"
+    private domain = process.env.NEXT_PUBLIC_BACKEND_DOMAIN
 
     /**
      * Defines the endpoint used when querying the API.
