@@ -1,18 +1,32 @@
 "use client"
 
 import ExpenseClient from "@/app/clients/ExpenseClient";
+import ProjectClient from "@/app/clients/ProjectClient";
 import DateUtil from "@/app/utils/DateUtil";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ExpenseFormParams {
 	expense: Expense | null;
-	onSubmitCallback: any
+	projects: Project[]
 }
 
 export default function ExpenseForm(params: ExpenseFormParams) {
-	const [expense, setFormData] = useState(params.expense);
+	if (!params) {
+		return (
+			<div>Loading...</div>
+		)
+	}
+
+	const [expense, setExpense] = useState<Expense|null>(null);
+	const [projects, setProjects] = useState(params.projects);
 	const router = useRouter()
+
+	useEffect(() => {
+		if (params.expense) {
+			setExpense(params.expense)
+		}
+	})
 
 	const handleChange = (e: any) => {
 		if (expense == null) {
@@ -24,10 +38,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 			value = e.target.valueAsDate
 		}
 
-		setFormData({
-			...expense,
-			[e.target.name]: value
-		});
+		useEffect(() => {
+			setExpense({
+				expense,
+				[e.target.name]: value
+			});
+		})
 	}
 
 	const handleSubmit = (e: any) => {
@@ -189,9 +205,9 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									onChange={handleChange}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
-									<option value={1}>United States</option>
-									<option value={2}>Canada</option>
-									<option value={3}>Mexico</option>
+									{projects.map((project: Project) => (
+										<option value={project.id}>{project.name}</option>
+									))}
 								</select>
 							</div>
 						</div>

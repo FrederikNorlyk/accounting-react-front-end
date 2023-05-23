@@ -3,29 +3,40 @@
 import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseFactory from "@/app/factories/ExpenseFactory";
-import { redirect } from "next/navigation";
+import ProjectClient from "@/app/clients/ProjectClient";
+import { useEffect, useState } from "react";
 
-export default async function ExpensePage(param: any) {
+export default function ExpensePage(param: any) {
   if (!param) return (
     <div>Loading</div>
   )
 
-  const id = param.params.id
-  const isAddMode = id == 0;
+  const [id, setId] = useState(param.params.id)
+  const [isAddMode, setIsAddMode] = useState(id == 0);
+  const [expense, setExpense] = useState<Expense | null>(null)
+  const [projects, setProjects] = useState<Project[]>([])
 
-  var expense
-  if (isAddMode) {
-    expense = (new ExpenseFactory()).buildEmptyExpense()
-  } else {
-    const client = new ExpenseClient()
-    expense = await client.get(id)
+  const getExpense = async () => {
+    if (isAddMode) {
+      const factory = new ExpenseFactory()
+      setExpense(factory.buildEmptyExpense())
+    } else {
+      const client = new ExpenseClient()
+      setExpense(await client.get(id))
+    }
   }
 
-  const onSubmitCallback = () => {
-    redirect('/expenses')
+  const getProjects = async () => {
+    const projectClient = new ProjectClient()
+    setProjects(await projectClient.fetch())
   }
+
+  useEffect(() => {
+    getExpense()
+    getProjects()
+  }, [])
 
   return (
-    <ExpenseForm expense={expense} onSubmitCallback={onSubmitCallback}/>
+    <ExpenseForm expense={expense} projects={projects} />
   );
 }
