@@ -48,7 +48,8 @@ export default abstract class APIClient<T extends DatabaseRecord> {
         const response = await fetch(url, {
             headers: {
                 "Authorization": `Token ${token}`
-            }
+            },
+            cache: 'no-store'
         })
 
         if (!response.ok) {
@@ -95,7 +96,8 @@ export default abstract class APIClient<T extends DatabaseRecord> {
         const response = await fetch(url, {
             headers: {
                 "Authorization": `Token ${token}`
-            }
+            },
+            cache: 'no-store'
         })
 
         if (!response.ok) {
@@ -120,7 +122,32 @@ export default abstract class APIClient<T extends DatabaseRecord> {
      * @returns the created record
      */
     public async post(record: T): Promise<T | null> {
-        return this.submit(record, "POST");
+        const token = await this.getAccessToken()
+
+        const url = this.domain + this.getEndpoint()
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`
+            },
+            body: JSON.stringify(record),
+        })
+
+        if (!response.ok) {
+            console.error("Response not OK")
+            return null
+        }
+
+        const data = await response.json()
+
+        if (!data) {
+            console.error("Data was NULL")
+            return null
+        }
+
+        return data
     }
 
     /**
@@ -130,21 +157,17 @@ export default abstract class APIClient<T extends DatabaseRecord> {
     * @returns the updated record
     */
     public async put(record: T): Promise<T | null> {
-        return this.submit(record, "POST");
-    }
-
-    private async submit(record: T, method: string): Promise<T | null> {
         const token = await this.getAccessToken()
 
-        const url = this.domain + this.getEndpoint()
+        const url = this.domain + this.getEndpoint() + record.id + "/"
 
         const response = await fetch(url, {
-            method: method,
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Token ${token}`
             },
-            body: JSON.stringify(record)
+            body: JSON.stringify(record),
         })
 
         if (!response.ok) {
