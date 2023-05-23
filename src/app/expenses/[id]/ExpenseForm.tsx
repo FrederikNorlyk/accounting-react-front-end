@@ -2,14 +2,17 @@
 
 import ExpenseClient from "@/app/clients/ExpenseClient";
 import DateUtil from "@/app/utils/DateUtil";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ExpenseFormParams {
 	expense: Expense | null;
+	onSubmitCallback: any
 }
 
 export default function ExpenseForm(params: ExpenseFormParams) {
 	const [expense, setFormData] = useState(params.expense);
+	const router = useRouter()
 
 	const handleChange = (e: any) => {
 		if (expense == null) {
@@ -25,10 +28,10 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 			...expense,
 			[e.target.name]: value
 		});
-	};
+	}
 
-	const handleSubmit = async (e: any) => {
-		e.preventDefault();
+	const handleSubmit = (e: any) => {
+		e.preventDefault()
 
 		if (expense == null) {
 			return
@@ -41,7 +44,13 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		} else {
 			addedExpense = client.put(expense)
 		}
-	};
+		
+		router.push('/expenses')
+	}
+
+	const handleCancel = (e: any) => {
+		router.push('/expenses')
+	}
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -90,6 +99,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									type="number"
 									name="amount"
 									id="amount"
+									step={.01}
 									value={expense?.amount || ""}
 									onChange={handleChange}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
@@ -199,6 +209,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 
 				<button
 					type="button"
+					onClick={handleCancel}
 					className="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-600"
 				>
 					Cancel

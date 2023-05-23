@@ -3,6 +3,7 @@
 import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseFactory from "@/app/factories/ExpenseFactory";
+import { redirect } from "next/navigation";
 
 export default async function ExpensePage(param: any) {
   if (!param) return (
@@ -20,7 +21,11 @@ export default async function ExpensePage(param: any) {
     expense = await client.get(id)
   }
 
+  const onSubmitCallback = () => {
+    redirect('/expenses')
+  }
+
   return (
-    <ExpenseForm expense={expense} />
+    <ExpenseForm expense={expense} onSubmitCallback={onSubmitCallback}/>
   );
 }
