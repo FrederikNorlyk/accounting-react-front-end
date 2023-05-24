@@ -1,9 +1,9 @@
 "use client"
 
 import ExpenseClient from "@/app/clients/ExpenseClient";
-import ProjectClient from "@/app/clients/ProjectClient";
+import ProjectsPage from "@/app/projects/page";
 import DateUtil from "@/app/utils/DateUtil";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface ExpenseFormParams {
@@ -18,33 +18,18 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		)
 	}
 
-	const [expense, setExpense] = useState<Expense|null>(null);
-	const [projects, setProjects] = useState(params.projects);
+	const [expense, setExpense] = useState<any>(null);
+	const [projects, setProjects] = useState<Project[]>([]);
 	const router = useRouter()
 
 	useEffect(() => {
-		if (params.expense) {
+		if (!expense && params.expense) {
 			setExpense(params.expense)
 		}
+		if (projects.length == 0 && params.projects.length > 0) {
+			setProjects(params.projects)
+		}
 	})
-
-	const handleChange = (e: any) => {
-		if (expense == null) {
-			return
-		}
-
-		var value = e.target.value
-		if (e.target.name === "date") {
-			value = e.target.valueAsDate
-		}
-
-		useEffect(() => {
-			setExpense({
-				expense,
-				[e.target.name]: value
-			});
-		})
-	}
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
@@ -96,7 +81,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									name="date"
 									id="date"
 									value={DateUtil.dateToInputFormat(expense?.date || new Date())} 
-									onChange={handleChange}
+									onChange={e => {
+										setExpense({
+											...expense,
+											date: e.target.valueAsDate
+										})
+									}}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								/>
 							</div>
@@ -117,7 +107,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									id="amount"
 									step={.01}
 									value={expense?.amount || ""}
-									onChange={handleChange}
+									onChange={e => {
+										setExpense({
+											...expense,
+											amount: e.target.value
+										})
+									}}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								/>
 							</div>
@@ -138,7 +133,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									id="note"
 									value={expense?.note || ""}
 									placeholder="What did you buy?"
-									onChange={handleChange}
+									onChange={e => {
+										setExpense({
+											...expense,
+											note: e.target.value
+										})
+									}}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
 								/>
 							</div>
@@ -158,9 +158,13 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									name="details"
 									rows={3}
 									value={expense?.details || ""}
-									onChange={handleChange}
+									onChange={e => {
+										setExpense({
+											...expense,
+											details: e.target.value
+										})
+									}}
 									className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-md sm:text-sm sm:leading-6"
-									defaultValue={""}
 								/>
 							</div>
 							<p className="mt-3 text-sm leading-6 text-gray-600">
@@ -180,7 +184,12 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 								<select
 									id="merchant"
 									name="merchant"
-									onChange={handleChange}
+									onChange={e => {
+										setExpense({
+											...expense,
+											merchant: e.target.value
+										})
+									}}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
 									<option value={1}>United States</option>
@@ -202,11 +211,17 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 								<select
 									id="project"
 									name="project"
-									onChange={handleChange}
+									value={expense?.project ?? 0}
+									onChange={e => {
+										setExpense({
+											...expense,
+											project: e.target.value
+										})
+									}}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
 									{projects.map((project: Project) => (
-										<option value={project.id}>{project.name}</option>
+										<option key={project.id} value={project.id}>{project.name}</option>
 									))}
 								</select>
 							</div>
