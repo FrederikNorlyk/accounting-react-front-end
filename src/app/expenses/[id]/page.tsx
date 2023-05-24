@@ -2,10 +2,10 @@
 
 import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
-import ExpenseFactory from "@/app/factories/ExpenseFactory";
-import ProjectClient from "@/app/clients/ProjectClient";
+import ExpenseFactory from "@/factories/ExpenseFactory";
+import ProjectClient from "@/clients/ProjectClient";
 import { useEffect, useState } from "react";
-import MerchantClient from "@/app/clients/MerchantClient";
+import MerchantClient from "@/clients/MerchantClient";
 
 export default function ExpensePage(param: any) {
   if (!param) return (

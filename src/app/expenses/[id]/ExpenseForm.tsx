@@ -1,7 +1,7 @@
 "use client"
 
-import ExpenseClient from "@/app/clients/ExpenseClient";
-import DateUtil from "@/app/utils/DateUtil";
+import ExpenseClient from "@/clients/ExpenseClient";
+import DateUtil from "@/utils/DateUtil";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
