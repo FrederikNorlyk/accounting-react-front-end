@@ -17,6 +17,7 @@ Add a file in the root directory called <code>.env</code> with the following pro
 ```
 NEXTAUTH_SECRET=verySecretKey
 NEXTAUTH_URL=http://localhost:3000/
+NEXT_PUBLIC_BACKEND_DOMAIN=http://localhost:8000/
 ```
 
 In a terminal navigate to the source code and run the following commands
