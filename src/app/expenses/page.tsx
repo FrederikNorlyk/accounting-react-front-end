@@ -5,7 +5,7 @@ import ExpenseEntry from "./ExpenseEntry";
 import ExpenseClient from "@/clients/ExpenseClient"
 import AddExpenseEntry from "./AddExpenseEntry";
 
-export class ExpensesPage extends React.Component {
+export default class ExpensesPage extends React.Component {
 
   state = {
     expenses: []
@@ -28,5 +28,3 @@ export class ExpensesPage extends React.Component {
     );
   }
 }
-
-export default ExpensesPage;

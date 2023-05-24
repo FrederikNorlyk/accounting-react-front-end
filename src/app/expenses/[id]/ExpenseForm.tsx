@@ -43,11 +43,10 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		}
 
 		const client = new ExpenseClient()
-		var addedExpense;
 		if (expense.id == 0) {
-			addedExpense = client.post(expense)
+			client.post(expense)
 		} else {
-			addedExpense = client.put(expense)
+			client.put(expense)
 		}
 		
 		router.push('/expenses')

@@ -12,8 +12,9 @@ export default function ExpensePage(param: any) {
     <div>Loading</div>
   )
 
-  const [id, setId] = useState(param.params.id)
-  const [isAddMode, setIsAddMode] = useState(id == 0);
+  const id = param.params.id
+  const isAddMode = id == 0;
+
   const [expense, setExpense] = useState<Expense | null>(null)
   const [projects, setProjects] = useState<Project[]>([])
   const [merchants, setMerchants] = useState<Merchant[]>([])
