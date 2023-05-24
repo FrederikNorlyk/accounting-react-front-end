@@ -2,8 +2,8 @@ import APIClient from "@/clients/APIClient";
 
 export default class ProjectClient extends APIClient<Project> {
     
-    convertTypes(record: Project): Project {
-        return record
+    parse(record: any): Project {
+        return record as Project
     }
 
     getEndpoint(): string {

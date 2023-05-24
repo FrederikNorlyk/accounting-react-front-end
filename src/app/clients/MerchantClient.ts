@@ -2,8 +2,8 @@ import APIClient from "@/clients/APIClient";
 
 export default class MerchantClient extends APIClient<Merchant> {
     
-    convertTypes(record: Merchant): Merchant {
-        return record
+    parse(record: any): Merchant {
+        return record as Merchant
     }
 
     getEndpoint(): string {

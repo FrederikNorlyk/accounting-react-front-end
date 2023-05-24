@@ -2,10 +2,16 @@ import APIClient from "@/clients/APIClient";
 
 export default class ExpenseClient extends APIClient<Expense> {
     
-    convertTypes(record: Expense): Expense {
+    parse(record: any): Expense {
         record.date = new Date(record.date)
 
-        return record
+        record.merchantName = record.merchant_name
+        delete record.merchant_name
+
+        record.projectName = record.project_name
+        delete record.project_name
+
+        return record as Expense
     }
 
     getEndpoint(): string {

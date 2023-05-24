@@ -8,5 +8,7 @@ interface Expense extends DatabaseRecord {
   details: string
   amount: number
   project: number
+  projectName: string
   merchant: number
+  merchantName: string
 }

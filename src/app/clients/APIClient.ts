@@ -17,7 +17,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
      * 
      * @param record 
      */
-    abstract convertTypes(record: T): T;
+    abstract parse(record: any): T;
 
     /**
      * Gets the user's access token.
@@ -77,7 +77,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
         var records = [] as T[];
         for (let index = 0; index < data.results.length; index++) {
             const record = data.results[index];
-            records.push(this.convertTypes(record))
+            records.push(this.parse(record))
         }
         return records
     }
@@ -112,7 +112,7 @@ export default abstract class APIClient<T extends DatabaseRecord> {
             return null
         }
 
-        return this.convertTypes(data)
+        return this.parse(data)
     }
 
     /**
