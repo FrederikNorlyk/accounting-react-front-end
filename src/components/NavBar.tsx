@@ -9,6 +9,7 @@ import SignOutButton from "./SignOutButton";
 const navigation = [
 	{ name: "Expenses", href: "/expenses" },
 	{ name: "Projects", href: "/projects" },
+	{ name: "Merchants", href: "/merchants" },
 ];
 
 const user = {

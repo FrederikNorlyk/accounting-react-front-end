@@ -1,48 +1,48 @@
 "use client"
 
-import ProjectClient from "@/clients/ProjectClient";
+import MerchantClient from "@/clients/MerchantClient";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface ProjectFormParams {
-	project: Project | null
+interface MerchantFormParams {
+	merchant: Merchant | null
 }
 
-export default function ProjectForm(params: ProjectFormParams) {
+export default function MerchantForm(params: MerchantFormParams) {
 	if (!params) {
 		return (
 			<div>Loading...</div>
 		)
 	}
 
-	const [project, setProject] = useState<Project|null>(null);
+	const [merchant, setMerchant] = useState<Merchant|null>(null);
 	const router = useRouter()
 
 	useEffect(() => {
-		if (!project && params.project) {
-			setProject(params.project)
+		if (!merchant && params.merchant) {
+			setMerchant(params.merchant)
 		}
 	})
 
 	const handleSubmit = (e: any) => {
 		e.preventDefault()
 
-		if (project == null) {
+		if (merchant == null) {
 			return
 		}
 
-		const client = new ProjectClient()
-		if (project.id == 0) {
-			client.post(project)
+		const client = new MerchantClient()
+		if (merchant.id == 0) {
+			client.post(merchant)
 		} else {
-			client.put(project)
+			client.put(merchant)
 		}
 		
-		router.push('/projects')
+		router.push('/merchants')
 	}
 
 	const handleCancel = (e: any) => {
-		router.push('/projects')
+		router.push('/merchants')
 	}
 
 	return (
@@ -50,10 +50,10 @@ export default function ProjectForm(params: ProjectFormParams) {
 			<div className="space-y-12">
 				<div className="border-b border-gray-900/10 pb-12">
 					<h2 className="text-base font-semibold leading-7 text-gray-900">
-						Project information
+						Merchant information
 					</h2>
 					<p className="mt-1 text-sm leading-6 text-gray-600">
-						Update the project
+						Update the merchant
 					</p>
 
 					<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -64,17 +64,17 @@ export default function ProjectForm(params: ProjectFormParams) {
 								htmlFor="name"
 								className="block text-sm font-medium leading-6 text-gray-900"
 							>
-								Project
+								Merchant
 							</label>
 							<div className="mt-2">
 								<input
 									type="text"
 									name="name"
 									id="name"
-									value={project?.name || ""}
+									value={merchant?.name || ""}
 									onChange={e => {
-										setProject({
-											...project,
+										setMerchant({
+											...merchant,
 											name: e.target.value
 										})
 									}}

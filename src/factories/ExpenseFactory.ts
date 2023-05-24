@@ -19,7 +19,8 @@ export default class ExpenseFactory extends DatabaseRecordFactory<Expense> {
         record.note = ""
         record.details = ""
         record.amount = 0
-        record.project = (new ProjectFactory()).buildEmptyProject()
+        record.project = 0
+        record.merchant = 0
 
         return record
     }
