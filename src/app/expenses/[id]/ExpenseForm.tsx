@@ -1,14 +1,14 @@
 "use client"
 
 import ExpenseClient from "@/app/clients/ExpenseClient";
-import ProjectsPage from "@/app/projects/page";
 import DateUtil from "@/app/utils/DateUtil";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface ExpenseFormParams {
-	expense: Expense | null;
+	expense: Expense | null
 	projects: Project[]
+	merchants: Merchant[]
 }
 
 export default function ExpenseForm(params: ExpenseFormParams) {
@@ -20,6 +20,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 
 	const [expense, setExpense] = useState<any>(null);
 	const [projects, setProjects] = useState<Project[]>([]);
+	const [merchants, setMerchants] = useState<Merchant[]>([]);
 	const router = useRouter()
 
 	useEffect(() => {
@@ -28,6 +29,9 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		}
 		if (projects.length == 0 && params.projects.length > 0) {
 			setProjects(params.projects)
+		}
+		if (merchants.length == 0 && params.merchants.length > 0) {
+			setMerchants(params.merchants)
 		}
 	})
 
@@ -184,6 +188,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 								<select
 									id="merchant"
 									name="merchant"
+									value={expense?.merchant ?? 0}
 									onChange={e => {
 										setExpense({
 											...expense,
@@ -192,9 +197,9 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 									}}
 									className="cursor-pointer block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
 								>
-									<option value={1}>United States</option>
-									<option value={2}>Canada</option>
-									<option value={3}>Mexico</option>
+									{merchants.map((merchant: Merchant) => (
+										<option key={merchant.id} value={merchant.id}>{merchant.name}</option>
+									))}
 								</select>
 							</div>
 						</div>
