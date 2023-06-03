@@ -22,7 +22,6 @@ const LoginPage = ({ searchParams }: IProps) => {
   
   return (
     <div className={"flex flex-col justify-center items-center  h-screen bg-gradient-to-br gap-1 from-cyan-300 to-sky-600"}>
-      <p>Domain: {process.env.NEXT_PUBLIC_BACKEND_DOMAIN}</p>
       {searchParams?.message && <p className="text-red-700 bg-red-100 py-2 px-5 rounded-md">{searchParams?.message}</p>}
       <div className="px-7 py-4 shadow bg-white rounded-md flex flex-col gap-2">
         <input type="text" onChange={(e: any) => (userName.current = e.target.value)} />
