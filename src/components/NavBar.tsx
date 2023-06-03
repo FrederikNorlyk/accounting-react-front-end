@@ -24,7 +24,7 @@ function classNames(...classes: string[]) {
 }
 
 export default function NavBar() {
-	const pathname = usePathname();
+	const pathname = usePathname() || '';
 	const { data: session } = useSession()
 
 	return (
