@@ -10,7 +10,8 @@ export const options: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
-        const url = "http://localhost:8000/token/"
+        const domain = process.env.NEXT_PUBLIC_BACKEND_DOMAIN
+        const url = domain + "token/"
 
         const response = await fetch(url, {
           method: 'POST',
