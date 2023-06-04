@@ -12,13 +12,6 @@ const navigation = [
 	{ name: "Merchants", href: "/merchants" },
 ];
 
-const user = {
-	name: "Tom Cook",
-	email: "tom@example.com",
-	imageUrl:
-		"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
-
 function classNames(...classes: string[]) {
 	return classes.filter(Boolean).join(" ");
 }
@@ -78,13 +71,9 @@ export default function NavBar() {
 									{/* Profile dropdown */}
 									<Menu as="div" className="relative ml-3">
 										<div>
-											<Menu.Button className="flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+											<Menu.Button className="flex max-w-xs items-center text-white bg-gray-800 text-sm">
 												<span className="sr-only">Open user menu</span>
-												<img
-													className="h-8 w-8 rounded-full"
-													src={user.imageUrl}
-													alt=""
-												/>
+												{session.user.name}
 											</Menu.Button>
 										</div>
 										<Transition
@@ -97,7 +86,7 @@ export default function NavBar() {
 											leaveTo="transform opacity-0 scale-95"
 										>
 											<Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-												<SignOutButton isMenuItem={true} />
+												<SignOutButton isMenuItem={true}/>
 											</Menu.Items>
 										</Transition>
 									</Menu>
@@ -147,24 +136,7 @@ export default function NavBar() {
 							})}
 						</div>
 						<div className="border-t border-gray-700 pb-3 pt-4">
-							<div className="flex items-center px-5">
-								<div className="flex-shrink-0">
-									<img
-										className="h-10 w-10 rounded-full"
-										src={user.imageUrl}
-										alt=""
-									/>
-								</div>
-								<div className="ml-3">
-									<div className="text-base font-medium leading-none text-white">
-										{user.name}
-									</div>
-									<div className="text-sm font-medium leading-none text-gray-400">
-										{user.email}
-									</div>
-								</div>
-							</div>
-							<div className="mt-3 space-y-1 px-2">
+							<div className="space-y-1 px-2">
 								<SignOutButton isMenuItem={false} />
 							</div>
 						</div>
