@@ -1,39 +1,69 @@
 "use client";
 
-import { SignInResponse, signIn } from "next-auth/react";
-import { useRef, useState } from "react";
+import { UserClient } from "@/clients/UserClient";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { SyntheticEvent, useRef, useState } from "react";
 
-interface IProps {
-  searchParams?: { [key: string]: string | string[] | undefined };
-}
-
-export default function LoginPage({ searchParams }: IProps) {
+export default function LoginPage() {
   const username = useRef("");
   const password = useRef("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter()
+  
+  const onSubmit = async (e: any) => {
     e.preventDefault()
+    
+    const buttonName = e.nativeEvent.submitter.name
 
     setErrorMessage(null)
 
+    if (buttonName === 'register') {
+      const client = new UserClient()
+      var response
+      try {
+        response = await client.register(username.current, password.current)
+      } catch (error) {
+        setErrorMessage("Could not connect to API")
+        return
+      }
+      const json = await response.json();
+
+      if (response.status != 201) {
+        if (json.username?.length == 1) {
+          setErrorMessage(json.username[0])
+        } else {
+          setErrorMessage("Could not create user")
+        }
+
+        return
+      }
+    }
+
+    login()
+  };
+
+  const login = async () => {
     const response = await signIn("credentials", {
       username: username.current,
       password: password.current,
       redirect: false,
       callbackUrl: "/",
-    }) as SignInResponse;
+    });
 
-    if (!response?.ok || response.status != 200) {
-      if (response.error == 'CredentialsSignin') {
+    if (response?.status != 200) {
+      if (response?.error == 'CredentialsSignin') {
         setErrorMessage('Invalid user or password');
-      } else if (response.error == 'fetch failed') {
+      } else if (response?.error == 'fetch failed') {
         setErrorMessage('Could not connect to API');
       } else {
-        setErrorMessage(response.error as string);
+        setErrorMessage(response?.error as string);
       }
+      return
     }
-  };
+
+    router.push('/expenses')
+  }
 
   return (
     <>
@@ -91,19 +121,22 @@ export default function LoginPage({ searchParams }: IProps) {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                name="login"
+                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
               </button>
             </div>
+            <div>
+              <button
+                type="submit"
+                name="register"
+                className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                Create new user
+              </button>
+            </div>
           </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{' '}
-            <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-              Create a user
-            </a>
-          </p>
         </div>
       </div>
     </>
