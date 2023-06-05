@@ -1,5 +1,4 @@
 import DatabaseRecordFactory from "./DatabaseRecordFactory";
-import ProjectFactory from "./ProjectFactory";
 
 /**
  * Factor for building {@link Expense} records.
@@ -17,7 +16,7 @@ export default class ExpenseFactory extends DatabaseRecordFactory<Expense> {
         record.url = ""
         record.date = new Date()
         record.note = ""
-        record.details = ""
+        record.details = null
         record.amount = 0
         record.project = 0
         record.merchant = 0

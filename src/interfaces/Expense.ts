@@ -5,7 +5,7 @@ interface Expense extends DatabaseRecord {
   url: string
   date: Date
   note: string
-  details: string
+  details: string|null
   amount: number
   project: number
   projectName: string
