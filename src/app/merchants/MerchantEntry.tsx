@@ -10,6 +10,7 @@ export default function MerchantEntry(props: MerchantEntryProp) {
   const merchant = props.merchant;
   const pathname = usePathname();
   const href = pathname + "/" + merchant.id;
+  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
 
   return (
     <li key={merchant.id}>
@@ -23,13 +24,17 @@ export default function MerchantEntry(props: MerchantEntryProp) {
               {merchant.name}
             </p>
             <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-              Total amount: 00.00
+              Total amount: {numberFormatter.format(merchant.totalAmount)}
             </p>
           </div>
         </div>
         <div className="hidden sm:flex sm:flex-col sm:items-end">
           <p className="text-sm leading-6 text-gray-900">&nbsp;</p>
-          <p className="mt-1 text-xs leading-5 text-gray-500">From 01/01/23 to 31/01/23</p>
+          {merchant.numberOfExpenses == 1 ?
+            <p className="mt-1 text-xs leading-5 text-gray-500">{merchant.numberOfExpenses} expense</p>
+            :
+            <p className="mt-1 text-xs leading-5 text-gray-500">{merchant.numberOfExpenses} expenses</p>
+          }
         </div>
       </Link>
     </li>

@@ -3,4 +3,6 @@
  */
 interface Merchant extends DatabaseRecord {
   name: string;
+  totalAmount: number,
+  numberOfExpenses: number
 }
