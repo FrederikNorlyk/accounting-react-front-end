@@ -7,10 +7,10 @@ interface ProjectEntryProp {
 }
 
 export default function ProjectEntry(props: ProjectEntryProp) {
-  const project = props.project;
-  const pathname = usePathname();
-  const href = pathname + "/" + project.id;
-  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
+  const project = props.project
+  const pathname = usePathname()
+  const href = pathname + "/" + project.id
+  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'})
   
   const dateFormatter = Intl.DateTimeFormat('da-DK', {
     year: "numeric",
@@ -18,7 +18,7 @@ export default function ProjectEntry(props: ProjectEntryProp) {
     day: "numeric",
     minute: undefined,
     second: undefined
-  });
+  })
 
   return (
     <li key={project.id}>

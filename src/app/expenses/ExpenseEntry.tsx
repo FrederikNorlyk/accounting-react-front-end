@@ -7,9 +7,18 @@ interface ExpenseEntryProp {
 }
 
 export default function ExpenseEntry(props: ExpenseEntryProp) {
-  const expense = props.expense;
-  const pathname = usePathname();
-  const href = pathname + "/" + expense.id;
+  const expense = props.expense
+  const pathname = usePathname()
+  const href = pathname + "/" + expense.id
+  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'})
+
+  const dateFormatter = Intl.DateTimeFormat('da-DK', {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    minute: undefined,
+    second: undefined
+  })
 
   return (
     <li key={expense.id}>
@@ -23,13 +32,13 @@ export default function ExpenseEntry(props: ExpenseEntryProp) {
               {expense.note}
             </p>
             <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-              {expense.amount}
+              {numberFormatter.format(expense.amount)}
             </p>
           </div>
         </div>
         <div className="hidden sm:flex sm:flex-col sm:items-end">
           <p className="text-sm leading-6 text-gray-900">{expense.projectName}</p>
-          <p className="mt-1 text-xs leading-5 text-gray-500">{expense.date.toJSON()}</p>
+          <p className="mt-1 text-xs leading-5 text-gray-500">{dateFormatter.format(expense.date)}</p>
         </div>
       </Link>
     </li>
