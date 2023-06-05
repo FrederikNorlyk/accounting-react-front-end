@@ -1,14 +1,16 @@
 "use client";
 
 import { UserClient } from "@/clients/UserClient";
+import Spinner from "@/components/Spinner";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { SyntheticEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 export default function LoginPage() {
   const username = useRef("");
   const password = useRef("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isLoading, setLoading] = useState(false)
   const router = useRouter()
   
   const onSubmit = async (e: any) => {
@@ -16,17 +18,21 @@ export default function LoginPage() {
     
     const buttonName = e.nativeEvent.submitter.name
 
+    setLoading(true)
     setErrorMessage(null)
 
     if (buttonName === 'register') {
       const client = new UserClient()
+      
       var response
       try {
         response = await client.register(username.current, password.current)
       } catch (error) {
         setErrorMessage("Could not connect to API")
+        setLoading(false)
         return
       }
+
       const json = await response.json();
 
       if (response.status != 201) {
@@ -36,6 +42,7 @@ export default function LoginPage() {
           setErrorMessage("Could not create user")
         }
 
+        setLoading(false)
         return
       }
     }
@@ -44,12 +51,18 @@ export default function LoginPage() {
   };
 
   const login = async () => {
+    if (!isLoading) {
+      setLoading(true)
+    }
+
     const response = await signIn("credentials", {
       username: username.current,
       password: password.current,
       redirect: false,
       callbackUrl: "/",
     });
+
+    setLoading(false)
 
     if (response?.status != 200) {
       if (response?.error == 'CredentialsSignin') {
@@ -117,12 +130,14 @@ export default function LoginPage() {
             </div>
 
             {errorMessage && <p className="text-red-700 bg-red-100 py-2 px-5 rounded-md">{errorMessage}</p>}
+            {isLoading && <Spinner />}
 
             <div>
               <button
                 type="submit"
                 name="login"
-                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 disabled:bg-blue-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
               </button>
@@ -131,7 +146,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 name="register"
-                className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                disabled={isLoading}
+                className="flex w-full justify-center rounded-md bg-orange-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-orange-400 disabled:bg-orange-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500"
               >
                 Create new user
               </button>
