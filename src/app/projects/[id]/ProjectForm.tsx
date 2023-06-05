@@ -1,11 +1,16 @@
 "use client"
 
 import ProjectClient from "@/clients/ProjectClient";
+import DeleteModal from "@/components/DeleteModal";
+import FormButtonGroup from "@/components/FormButtonGroup";
+import { SingleRecordResult } from "@/models/SingleRecordResult";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 
 interface ProjectFormParams {
 	project: Project | null
+	onCancel: MouseEventHandler<HTMLButtonElement>
+	onSubmitSuccess: (m: Project) => any
 }
 
 export default function ProjectForm(params: ProjectFormParams) {
@@ -15,7 +20,10 @@ export default function ProjectForm(params: ProjectFormParams) {
 		)
 	}
 
-	const [project, setProject] = useState<Project|null>(null);
+	const [project, setProject] = useState<Project | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const [isShowingDeleteModal, setShowingDeleteModal] = useState(false)
+
 	const router = useRouter()
 
 	useEffect(() => {
@@ -24,28 +32,52 @@ export default function ProjectForm(params: ProjectFormParams) {
 		}
 	})
 
-	const handleSubmit = (e: any) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault()
 
-		if (project == null) {
+		setErrorMessage(null)
+
+		const client = new ProjectClient()
+
+		var result: SingleRecordResult<Project>
+		if (project!.id == 0) {
+			result = await client.post(project!)
+		} else {
+			result = await client.put(project!)
+		}
+
+		if (result.getError()) {
+			setErrorMessage(result.getError())
 			return
 		}
 
-		const client = new ProjectClient()
-		if (project.id == 0) {
-			client.post(project)
-		} else {
-			client.put(project)
-		}
-		
-		router.push('/projects')
+		params.onSubmitSuccess(result.getRecord()!)
 	}
 
-	const handleCancel = (e: any) => {
+	const onDelete = async () => {
+		const client = new ProjectClient()
+		const response = await client.delete(project!.id)
+
+		if (response?.status != 204) {
+			const json = await response?.json()
+			var error = json.detail ?? "Unknown error"
+			setErrorMessage(error)
+			setShowingDeleteModal(false)
+			return
+		}
+
 		router.push('/projects')
 	}
 
 	return (
+		<>
+		<DeleteModal 
+			isOpen={isShowingDeleteModal} 
+			onCancel={() => setShowingDeleteModal(false)} 
+			onDelete={onDelete} 
+			title="Delete project" 
+			warningText="Are you sure that you want to delete this project?" />
+		
 		<form onSubmit={handleSubmit}>
 			<div className="space-y-12">
 				<div className="border-b border-gray-900/10 pb-12">
@@ -53,7 +85,7 @@ export default function ProjectForm(params: ProjectFormParams) {
 						Project information
 					</h2>
 					<p className="mt-1 text-sm leading-6 text-gray-600">
-						Update the project
+						{project?.id == 0 ? "Create a new project" : "Update the project"}
 					</p>
 
 					<div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -72,9 +104,11 @@ export default function ProjectForm(params: ProjectFormParams) {
 									name="name"
 									id="name"
 									value={project?.name || ""}
+									autoFocus={true}
+									required={true}
 									onChange={e => {
 										setProject({
-											...project,
+											...project!,
 											name: e.target.value
 										})
 									}}
@@ -86,22 +120,18 @@ export default function ProjectForm(params: ProjectFormParams) {
 				</div>
 			</div>
 
-			<div className="mt-6 flex items-center gap-x-6">
-				<button
-					type="submit"
-					className="rounded-md bg-sky-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-				>
-					Update
-				</button>
+			{errorMessage && <p className="text-red-700 bg-red-100 py-2 px-5 rounded-md">{errorMessage}</p>}
 
-				<button
-					type="button"
-					onClick={handleCancel}
-					className="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-600"
-				>
-					Cancel
-				</button>
-			</div>
+			<FormButtonGroup 
+				submitButtonTitle={project?.id == 0 ? 'Add' : 'Update'}
+				showDeleteButton={project?.id != 0}
+				onCancel={params.onCancel}
+				onDelete={e => {
+					e.preventDefault()
+					setShowingDeleteModal(true)
+				}}
+			/>
 		</form>
+		</>
 	);
 }
