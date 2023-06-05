@@ -158,7 +158,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 				title="Delete expense" 
 				warningText="Are you sure that you want to delete this expense?"/>
 
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className="ml-3 mr-3">
 				<div className="space-y-12">
 					<div className="border-b border-gray-900/10 pb-12">
 						<h2 className="text-base font-semibold leading-7 text-gray-900">

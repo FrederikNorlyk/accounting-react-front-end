@@ -78,7 +78,7 @@ export default function MerchantForm(params: MerchantFormParams) {
 				title="Delete merchant"
 				warningText="Are you sure that you want to delete this merchant?" />
 
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} className="ml-3 mr-3">
 				<div className="space-y-12 pb-4">
 					<div className="">
 						<h2 className="text-base font-semibold leading-7 text-gray-900">
