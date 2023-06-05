@@ -9,7 +9,7 @@ Simple frontend for an accounting application, built using the React framework N
 ### What can it do?
 The application is modeled on an old PHP project, that I wrote to keep track of the expenses involved with restoring my sailboat. It keeps track of expenses, projects, and merchants.
 
-### Why did I make this frontend?
+### Why did I make this application?
 In an attempt to learn Python and React I started working on this project. The frontend is the React side of that attempt. Check out my other repository [accounting-api](https://github.com/FrederikNorlyk/accounting-api) which covers the Python part.
 
 ### Try it out!
