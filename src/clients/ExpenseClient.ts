@@ -1,6 +1,6 @@
-import APIClient from "@/clients/APIClient";
+import DatabaseRecordClient from "@/clients/DatabaseRecordClient";
 
-export default class ExpenseClient extends APIClient<Expense> {
+export default class ExpenseClient extends DatabaseRecordClient<Expense> {
     
     parse(record: any): Expense {
         record.date = new Date(record.date)

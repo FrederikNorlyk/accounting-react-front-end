@@ -1,6 +1,6 @@
-import APIClient from "@/clients/APIClient";
+import DatabaseRecordClient from "@/clients/DatabaseRecordClient";
 
-export default class MerchantClient extends APIClient<Merchant> {
+export default class MerchantClient extends DatabaseRecordClient<Merchant> {
     
     parse(record: any): Merchant {
         return record as Merchant

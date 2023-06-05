@@ -1,9 +1,12 @@
-import APIClient from "@/clients/APIClient";
+import DatabaseRecordClient from "@/clients/DatabaseRecordClient";
 
-export default class ProjectClient extends APIClient<Project> {
+export default class ProjectClient extends DatabaseRecordClient<Project> {
     
     parse(record: any): Project {
-        return record as Project
+        record.totalAmount = record.total_amount ?? 0
+        delete record.total_amount
+        
+        return record
     }
 
     getEndpoint(): string {
