@@ -4,4 +4,6 @@
 interface Project extends DatabaseRecord {
   name: string;
   totalAmount: number
+  fromDate: Date
+  toDate: Date
 }

@@ -10,7 +10,15 @@ export default function ProjectEntry(props: ProjectEntryProp) {
   const project = props.project;
   const pathname = usePathname();
   const href = pathname + "/" + project.id;
-  const formatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
+  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
+  
+  const dateFormatter = Intl.DateTimeFormat('da-DK', {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    minute: undefined,
+    second: undefined
+  });
 
   return (
     <li key={project.id}>
@@ -24,13 +32,18 @@ export default function ProjectEntry(props: ProjectEntryProp) {
               {project.name}
             </p>
             <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-              Total amount: {formatter.format(project.totalAmount)}
+              Total amount: {numberFormatter.format(project.totalAmount)}
             </p>
           </div>
         </div>
         <div className="hidden sm:flex sm:flex-col sm:items-end">
           <p className="text-sm leading-6 text-gray-900">&nbsp;</p>
-          <p className="mt-1 text-xs leading-5 text-gray-500">From 01/01/23 to 31/01/23</p>
+          {project.fromDate ? 
+            <p className="mt-1 text-xs leading-5 text-gray-500">{dateFormatter.format(project.fromDate)} to {dateFormatter.format(project.toDate)}</p>
+          :
+          <p className="mt-1 text-xs leading-5 text-gray-500">&nbsp;</p>
+          }
+          
         </div>
       </Link>
     </li>
