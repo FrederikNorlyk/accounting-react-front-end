@@ -1,3 +1,3 @@
 interface DatabaseRecord {
-    id?: number|undefined
+    id: number
 }

@@ -3,4 +3,5 @@
  */
 interface Project extends DatabaseRecord {
   name: string;
+  totalAmount: number
 }

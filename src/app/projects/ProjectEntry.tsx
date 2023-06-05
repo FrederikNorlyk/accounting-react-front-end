@@ -10,6 +10,7 @@ export default function ProjectEntry(props: ProjectEntryProp) {
   const project = props.project;
   const pathname = usePathname();
   const href = pathname + "/" + project.id;
+  const formatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
 
   return (
     <li key={project.id}>
@@ -23,7 +24,7 @@ export default function ProjectEntry(props: ProjectEntryProp) {
               {project.name}
             </p>
             <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-              Total amount: 00.00
+              Total amount: {formatter.format(project.totalAmount)}
             </p>
           </div>
         </div>
