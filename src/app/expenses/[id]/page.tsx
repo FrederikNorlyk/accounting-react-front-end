@@ -3,9 +3,7 @@
 import ExpenseClient from "@/clients/ExpenseClient";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseFactory from "@/factories/ExpenseFactory";
-import ProjectClient from "@/clients/ProjectClient";
 import { useEffect, useState } from "react";
-import MerchantClient from "@/clients/MerchantClient";
 
 export default function ExpensePage(param: any) {
   if (!param) return (
@@ -16,8 +14,6 @@ export default function ExpensePage(param: any) {
   const isAddMode = id == 0;
 
   const [expense, setExpense] = useState<Expense | null>(null)
-  const [projects, setProjects] = useState<Project[]>([])
-  const [merchants, setMerchants] = useState<Merchant[]>([])
 
   const getExpense = async () => {
     if (isAddMode) {
@@ -25,27 +21,18 @@ export default function ExpensePage(param: any) {
       setExpense(factory.buildEmptyExpense())
     } else {
       const client = new ExpenseClient()
-      setExpense(await client.get(id))
+      const result = await client.get(id)
+        if (result.getRecord()) {
+            setExpense(result.getRecord())
+        }
     }
-  }
-
-  const getProjects = async () => {
-    const projectClient = new ProjectClient()
-    setProjects(await projectClient.fetch())
-  }
-
-  const getMerchants = async () => {
-    const merchantClient = new MerchantClient()
-    setMerchants(await merchantClient.fetch())
   }
 
   useEffect(() => {
     getExpense()
-    getProjects()
-    getMerchants()
   }, [])
 
   return (
-    <ExpenseForm expense={expense} projects={projects} merchants={merchants} />
+    <ExpenseForm expense={expense} />
   );
 }
