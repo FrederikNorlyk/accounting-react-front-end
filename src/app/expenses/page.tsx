@@ -3,9 +3,9 @@
 import React from "react";
 import ExpenseEntry from "./ExpenseEntry";
 import ExpenseClient from "@/clients/ExpenseClient"
-import { Dropdown, DropdownOption } from "@/components/Dropdown";
+import { DropdownOption } from "@/components/Dropdown";
 import { SortBy, SortDirection } from "@/query/SortBy";
-import { AddRecordButton } from "@/components/AddRecordButton";
+import { ActionToolbar } from "@/components/ActionToolbar";
 
 export default class ExpensesPage extends React.Component {
 
@@ -37,14 +37,7 @@ export default class ExpensesPage extends React.Component {
   public render(): JSX.Element {
     return (
       <ul className="divide-y divide-gray-200">
-        <div className="mt-6 flex justify-between">
-          <div className="flex gap-x-4 mb-5">
-            <AddRecordButton title="Add new expense" />
-          </div>
-          <div className="sm:flex sm:flex-col sm:items-end">
-            <Dropdown title="Sort by" options={this.getSortOptions()}/>
-          </div>
-        </div>
+        <ActionToolbar addRecordButtonTitle="Add new expense" sortOptions={this.getSortOptions()} />
         {this.state.expenses.map((expense: Expense) => (
           <ExpenseEntry key={expense.id} expense={expense} />
         ))}

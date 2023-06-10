@@ -4,7 +4,8 @@ import MerchantEntry from "./MerchantEntry";
 import React from "react";
 import MerchantClient from "@/clients/MerchantClient";
 import { SortBy, SortDirection } from "@/query/SortBy";
-import { AddRecordButton } from "@/components/AddRecordButton";
+import { ActionToolbar } from "@/components/ActionToolbar";
+import { DropdownOption } from "@/components/Dropdown";
 
 export default class MerchantsPage extends React.Component {
 
@@ -13,15 +14,28 @@ export default class MerchantsPage extends React.Component {
   }
 
   async componentDidMount() {
+    this.reloadRecords(new SortBy("name", SortDirection.ASCENDING))
+  }
+
+  private async reloadRecords(sortBy: SortBy) {
     const client = new MerchantClient()
-    const merchants = await client.fetch(new SortBy("date", SortDirection.DESCENDING))
+    const merchants = await client.fetch(sortBy)
     this.setState({ merchants: merchants })
+  }
+
+  private getSortOptions() {
+    var options: DropdownOption[] = []
+  
+    options.push(new DropdownOption("Name", () => {this.reloadRecords(new SortBy("name", SortDirection.ASCENDING))}))
+    options.push(new DropdownOption("Name (reversed)", () => {this.reloadRecords(new SortBy("name", SortDirection.DESCENDING))}))
+  
+    return options
   }
 
   public render(): JSX.Element {
     return (
       <ul className="divide-y divide-gray-200">
-        <AddRecordButton title="Add new merchant" />
+        <ActionToolbar addRecordButtonTitle="Add new merchant" sortOptions={this.getSortOptions()} />
         {this.state.merchants.map((merchant: Merchant) => (
           <MerchantEntry key={merchant.id} merchant={merchant} />
         ))}
