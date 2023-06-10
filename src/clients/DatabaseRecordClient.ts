@@ -1,4 +1,5 @@
 import { SingleRecordResult } from "@/models/SingleRecordResult";
+import { SortBy } from "@/query/SortBy";
 import { getSession } from "next-auth/react";
 
 /**
@@ -41,15 +42,21 @@ export default abstract class DatabaseRecordClient<T extends DatabaseRecord> {
      * 
      * @returns a list of records
      */
-    public async fetch(): Promise<T[]> {
+    public async fetch(sortBy: SortBy): Promise<T[]> {
         const token = await this.getAccessToken()
 
-        const url = this.domain + this.getEndpoint()
+        const searchParams = new URLSearchParams({
+            sortField: sortBy.field,
+            sortDir: sortBy.getDirectionAsString(),
+        })
+
+        const url = `${this.domain}${this.getEndpoint()}?${searchParams}`
 
         const response = await fetch(url, {
             headers: {
                 "Authorization": `Token ${token}`
             },
+            
             cache: 'no-store'
         })
 

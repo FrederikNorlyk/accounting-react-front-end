@@ -11,6 +11,7 @@ import MerchantModal from "@/components/MerchantModal";
 import ProjectModal from "@/components/ProjectModal";
 import SubmitButton from "@/components/SubmitButton";
 import { SingleRecordResult } from "@/models/SingleRecordResult";
+import { SortBy, SortDirection } from "@/query/SortBy";
 import DateUtil from "@/utils/DateUtil";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -60,7 +61,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		isGettingProjects.current = true
 
 		const client = new ProjectClient()
-		setProjects(await client.fetch())
+		setProjects(await client.fetch(new SortBy("name", SortDirection.ASCENDING)))
 
 		isGettingProjects.current = false
 	}
@@ -72,7 +73,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		isGettingMerchants.current = true
 
 		const client = new MerchantClient()
-		setMerchants(await client.fetch())
+		setMerchants(await client.fetch(new SortBy("name", SortDirection.ASCENDING)))
 
 		isGettingMerchants.current = false
 	}
