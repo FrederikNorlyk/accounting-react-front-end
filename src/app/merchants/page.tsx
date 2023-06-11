@@ -19,7 +19,7 @@ export default class MerchantsPage extends React.Component {
 
   private async reloadRecords(sortBy: SortBy) {
     const client = new MerchantClient()
-    const merchants = await client.fetch(sortBy)
+    const merchants = (await client.fetch(sortBy)).getRecords()
     this.setState({ merchants: merchants })
   }
 

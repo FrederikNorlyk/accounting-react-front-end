@@ -19,7 +19,7 @@ export default class ProjectsPage extends React.Component {
 
   private async reloadRecords(sortBy: SortBy) {
     const client = new ProjectClient()
-    const projects = await client.fetch(sortBy)
+    const projects = (await client.fetch(sortBy)).getRecords()
     this.setState({ projects: projects })
   }
 

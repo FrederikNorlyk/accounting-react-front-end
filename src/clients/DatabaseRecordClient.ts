@@ -1,3 +1,4 @@
+import { MultiRecordResult } from "@/models/MultiRecordResult";
 import { SingleRecordResult } from "@/models/SingleRecordResult";
 import { SortBy } from "@/query/SortBy";
 import { getSession } from "next-auth/react";
@@ -42,52 +43,51 @@ export default abstract class DatabaseRecordClient<T extends DatabaseRecord> {
      * 
      * @returns a list of records
      */
-    public async fetch(sortBy: SortBy): Promise<T[]> {
+    public async fetch(sortBy: SortBy, page: number = 1): Promise<MultiRecordResult<T>> {
         const token = await this.getAccessToken()
 
         const searchParams = new URLSearchParams({
             sortField: sortBy.field,
             sortDir: sortBy.getDirectionAsString(),
+            page: page.toString()
         })
 
         const url = `${this.domain}${this.getEndpoint()}?${searchParams}`
 
-        const response = await fetch(url, {
-            headers: {
-                "Authorization": `Token ${token}`
-            },
-            
-            cache: 'no-store'
-        })
-
-        if (!response.ok) {
-            console.error("Response not OK")
-            return []
+        var response
+        try {
+            response = await fetch(url, {
+                headers: {
+                    "Authorization": `Token ${token}`
+                },
+                cache: 'no-store'
+            })
+        } catch (error) {
+            return MultiRecordResult.asErrorResult(503, "Could not connect to the API")
         }
 
-        const data = await response.json()
+        const json = await response.json()
 
-        if (!data) {
-            console.error("Data was NULL")
-            return []
-        }
-
-        if (data.detail) {
-            console.error("data.detail: " + data.detail)
-            return []
-        }
-
-        if (!data.results) {
-            console.error("No results")
-            return []
+        if (response.status != 200) {
+            var error = "Unknown error"
+            if (json.detail) {
+                error = json.detail
+            } else if (json.details?.length > 0) {
+                error = json.details[0]
+            }
+            return MultiRecordResult.asErrorResult(response.status, error)
         }
 
         var records = [] as T[]
-        for (let index = 0; index < data.results.length; index++) {
-            const record = data.results[index];
+        for (let index = 0; index < json.results.length; index++) {
+            const record = json.results[index];
             records.push(this.parse(record))
         }
-        return records
+
+        const hasPreviousPage = json.previous != null
+        const hasNextPage = json.next != null
+
+        return MultiRecordResult.asSuccessResult(response.status, records, page, hasPreviousPage, hasNextPage)
     }
 
     /**
@@ -178,7 +178,7 @@ export default abstract class DatabaseRecordClient<T extends DatabaseRecord> {
         return SingleRecordResult.asSuccessResult(response.status, newRecord)
     }
 
-    public async delete(id: number): Promise<Response|null> {
+    public async delete(id: number): Promise<Response | null> {
         const token = await this.getAccessToken()
         const url = this.domain + this.getEndpoint() + id + "/"
 

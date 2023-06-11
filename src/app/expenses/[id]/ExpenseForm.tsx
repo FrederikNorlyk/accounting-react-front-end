@@ -61,7 +61,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		isGettingProjects.current = true
 
 		const client = new ProjectClient()
-		setProjects(await client.fetch(new SortBy("name", SortDirection.ASCENDING)))
+		setProjects((await client.fetch(new SortBy("name", SortDirection.ASCENDING))).getRecords())
 
 		isGettingProjects.current = false
 	}
@@ -73,7 +73,7 @@ export default function ExpenseForm(params: ExpenseFormParams) {
 		isGettingMerchants.current = true
 
 		const client = new MerchantClient()
-		setMerchants(await client.fetch(new SortBy("name", SortDirection.ASCENDING)))
+		setMerchants((await client.fetch(new SortBy("name", SortDirection.ASCENDING))).getRecords())
 
 		isGettingMerchants.current = false
 	}
