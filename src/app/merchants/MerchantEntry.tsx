@@ -10,7 +10,7 @@ export default function MerchantEntry(props: MerchantEntryProp) {
   const merchant = props.merchant;
   const pathname = usePathname();
   const href = pathname + "/" + merchant.id;
-  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'});
+  const numberFormatter = Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
 
   return (
     <li key={merchant.id}>

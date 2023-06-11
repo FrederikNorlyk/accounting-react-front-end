@@ -10,9 +10,9 @@ export default function ProjectEntry(props: ProjectEntryProp) {
   const project = props.project
   const pathname = usePathname()
   const href = pathname + "/" + project.id
-  const numberFormatter = Intl.NumberFormat('da-DK', {style: 'currency', currency: 'DKK'})
+  const numberFormatter = Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'})
   
-  const dateFormatter = Intl.DateTimeFormat('da-DK', {
+  const dateFormatter = Intl.DateTimeFormat('en-US', {
     year: "numeric",
     month: "numeric",
     day: "numeric",
