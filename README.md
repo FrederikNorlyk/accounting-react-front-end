@@ -1,5 +1,5 @@
 # Accounting front-end
-Simple frontend for an accounting application, built using the React framework Next.js.
+Simple front-end for an accounting application, built using the React framework Next.js.
 
 ### Technologies
 - Next.js 13 (React)
@@ -28,4 +28,4 @@ In a terminal navigate to the source code and run the following commands
 npm install
 npm run dev
 ```
-The frontend does not work without a backend so you will also need to deploy the [API](https://github.com/FrederikNorlyk/accounting-api).
+The front-end does not work without a backend so you will also need to deploy the [API](https://github.com/FrederikNorlyk/accounting-api).
