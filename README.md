@@ -1,4 +1,4 @@
-# Accounting frontend
+# Accounting front-end
 Simple frontend for an accounting application, built using the React framework Next.js.
 
 ### Technologies
