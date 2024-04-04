@@ -12,9 +12,6 @@ The application is modeled on an old PHP project, that I wrote to keep track of 
 ### Why did I make this application?
 In an attempt to learn Python and React, I started working on this project. The front-end is the React side of that attempt. Check out my other repository [accounting-api](https://github.com/FrederikNorlyk/accounting-api) which covers the Python part.
 
-### Try it out! 🚀
-The project is hosted [here on Render](https://accounting-react-frontend.onrender.com/). Beware that it is running on their free tier which is quite slow. The first time you visit the address, Render will spin up the server, so please be patient. When creating a new user some random demo data is generated.
-
 ### Run it yourself ###
 Add a file in the root directory called <code>.env</code> with the following properties:
 ```
